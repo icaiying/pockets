@@ -1,10 +1,11 @@
 import React, { PureComponent } from 'react'
 import { generateRandomList } from '../../utils'
-import Pockets from '../Pocket/PocketTables';
+import Pockets from '../Pocket/PocketsTable';
 import Immutable from 'immutable'
 import PropTypes from 'prop-types'
 import './App.css'
-import 'react-virtualized/styles.css'
+// import 'react-virtualized/styles.css'
+import 'antd/dist/antd.css'
 
 // HACK Generate arbitrary data for use in example components :)
 // let list = null;

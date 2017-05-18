@@ -21,6 +21,8 @@ app.all('*', (req, res, next) => {
 });
 
 app.get('/pocket', (req, res) => {
+  console.log(req.query)
+
   axios.get(`http://getpocket.com/v3/get?consumer_key=67012-ef0752f8de314e0297670d14&access_token=8f463a11-ed8c-c83f-a89d-7083e0&tag=yktt`)
   .then(function (response) {
     const data = []
