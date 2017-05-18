@@ -1,23 +1,19 @@
 import React, { PureComponent } from 'react'
-import { Table, Input } from 'antd';
+import { Layout, Table, Input } from 'antd';
 import axios from 'axios';
 
+const { Header, Footer, Sider, Content } = Layout;
 const Search = Input.Search;
 
 const columns = [{
-  width: 80,
-  title: '编号',
-  dataIndex: 'sort_id',
-  sorter: true,
-}, {
-  width: 120,
+  width: 100,
   title: '收录时间',
   dataIndex: 'time_added',
   render: (text, record) => (record.created_at)
 }, {
   title: '标题',
-  dataIndex: 'resolved_title',
-  render: (text, record) => (<a href={record.resolved_url} target="_blank">{text}</a>)
+  dataIndex: 'given_title',
+  render: (text, record) => (<a href={record.given_url} target="_blank">{text}</a>)
 }];
 
 export default class PocketsTable extends React.Component {
@@ -45,7 +41,11 @@ export default class PocketsTable extends React.Component {
   fetch = (params = {}) => {
     console.log('params:', params);
     this.setState({ loading: true });
-    axios.get(`http://localhost:9000/pocket`).then((res) => {
+    let url = `http://localhost:9000/pocket`;
+    if (params.search) {
+        url = `${url}?search=${params.search}`;
+    }
+    axios.get(url).then((res) => {
       const pagination = { ...this.state.pagination };
       // Read total count from server
       // pagination.total = data.totalCount;
@@ -63,13 +63,28 @@ export default class PocketsTable extends React.Component {
   }
   render() {
     return (
-        <Table columns={columns}
-            rowKey={record => record.sort_id}
-            dataSource={this.state.data}
-            pagination={this.state.pagination}
-            loading={this.state.loading}
-            onChange={this.handleTableChange}
-            />
+      <Layout>
+        <Content>
+            <div style={{ background: '#fff', padding: 8}}>
+                <Search
+                    placeholder="搜索文章标题"
+                    onSearch={value => {
+                        this.fetch({'search': value});
+                    }}
+                />
+            </div>
+            <div style={{ background: '#fff', padding: 8, minHeight: 280 }}>
+            <Table columns={columns}
+                rowKey={record => record.sort_id}
+                dataSource={this.state.data}
+                pagination={this.state.pagination}
+                loading={this.state.loading}
+                onChange={this.handleTableChange}
+                size="small"
+                />
+            </div>
+        </Content>
+       </Layout>
     );
   }
 }
